@@ -1,0 +1,2 @@
+python-jenkins==1.2.1
+sqlalchemy==1.2.11
