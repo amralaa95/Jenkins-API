@@ -23,7 +23,7 @@ def connect_jenkins(username, password):
     return server
 
 def initialize_DB():
-    engine = create_engine('sqlite:///jenkins.db', echo=False)
+    engine = create_engine('sqlite:///jenkins_jobs.db', echo=False)
     session = sessionmaker(bind=engine)()
     BaseDB.metadata.create_all(engine)
     return session
@@ -35,14 +35,14 @@ def get_last_job_id(session, name):
     except:
         return None
 
-def add_jobs(start_build_number, last_build_number, jobName,session):
+def add_jobs(start_build_number, last_build_number, job_name,session):
 
     for curr_build_number in range(start_build_number , last_build_number ):
-        current = server.get_build_info(jobName, curr_build_number)
+        current = server.get_build_info(job_name, curr_build_number)
         curr_job = User_Jobs()
         curr_job.job_id = current['id']
+        curr_job.name = job_name
         curr_job.building = current['building']
-        curr_job.name = jobName
         curr_job.result = current['result']
         curr_job.created_at = datetime.datetime.fromtimestamp(long(current['timestamp'])/1000)
         session.add(curr_job)
